@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Parts Transfer Confirmation</title>
+    <!-- Materialize CSS (CDN) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <!-- External CSS (Your custom styles) -->
+    <link href="contractgen.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h3 class="center-align">Vehicle Parts Transfer Confirmation</h3>
+        <form>
+            <div class="input-field">
+                <input id="registration" type="text" placeholder="E.g.: NZL6CSFQ">
+                <label for="registration">Vehicle Registration Number</label>
+            </div>
+
+            <div class="input-field">
+                <textarea id="parts" class="materialize-textarea" placeholder="E.g.:
+1x 98mm Turbo
+1x 8-Speed Sequential Gearbox
+1x Stage 3 Brakes
+1x Stage 3 Dump Valve
+1x Stage 4 Coilovers
+1x Stage 5 Swaybars
+1x Stage 4 Dampeners
+1x Stage 3 Weight Reduction
+1x Stage 3 Clutch Plate
+Full Set of Slick Tires"></textarea>
+                <label for="parts">Vehicle Parts Seized</label>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s6">
+                    <input id="officerCallsign" type="text" maxlength="3" placeholder="E.g.: 369">
+                    <label for="officerCallsign">Callsign</label>
+                </div>
+                <div class="input-field col s6">
+                    <input id="officerName" type="text" placeholder="E.g.: Mike Blunt">
+                    <label for="officerName">Officer's Full Name</label>
+                </div>
+            </div>
+
+            <!-- Authorizing Judge Title and Dropdown -->
+            <div class="input-field">
+                <label for="judge">Authorizing Judge</label> <!-- Label above the dropdown -->
+                <select id="judge">
+                    <option value="" disabled selected>Select Judge/Justice</option>
+                </select>
+            </div>
+
+            <div class="button-container">
+                <button type="button" class="btn waves-effect waves-light" onclick="generateDocument()">Generate Document</button>
+            </div>
+        </form>
+
+        <div class="output" id="output">
+            <h5>Output</h5>
+            <p>Please fill out the form and click "Generate Document" to see the result.</p>
+        </div>
+    </div>
+
+    <!-- Materialize JS (CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const elems = document.querySelectorAll('select');
+            M.FormSelect.init(elems);
+
+            loadJudges();
+        });
+
+        function loadJudges() {
+            const judges = [
+                { "Rank": "Judge", "name": "Dan Fischer" },
+                { "Rank": "Judge", "name": "Raven LeBlanc" },
+                { "Rank": "Judge", "name": "Tristan Aziz" },
+                { "Rank": "Judge", "name": "Nathan Barr" },
+                { "Rank": "Justice", "name": "Julia Wren" },
+                { "Rank": "Chief Justice", "name": "Arthur MacNee" }
+            ];
+
+            const judgeDropdown = document.getElementById('judge');
+            // Clear any existing options before adding new ones
+            judgeDropdown.innerHTML = '<option value="" disabled selected>Select Judge/Justice</option>';
+            
+            judges.forEach(judge => {
+                const option = document.createElement('option');
+                option.value = judge.Rank;
+                option.textContent = `${judge.Rank} ${judge.name}`;
+                judgeDropdown.appendChild(option);
+            });
+
+            M.FormSelect.init(judgeDropdown);
+        }
+
+        function generateDocument() {
+            const registration = document.getElementById('registration').value || '[Blank]';
+            const partsInput = document.getElementById('parts').value || '[Blank]';
+            const officerCallsign = document.getElementById('officerCallsign').value || '[Blank]';
+            const officerName = document.getElementById('officerName').value || '[Blank]';
+            const judgeDropdown = document.getElementById('judge');
+            const judgeTitle = judgeDropdown.value || '[Blank]';
+            const judgeName = judgeDropdown.options[judgeDropdown.selectedIndex]?.text.split(' ').slice(1).join(' ') || '[Blank]';
+
+            // Ensure each part is prefixed with a dash and separated by new lines
+            const partsList = partsInput
+                .split('\n')  // Split by new line
+                .filter(line => line.trim() !== '')  // Remove empty lines
+                .map(line => `- ${line.trim()}`)  // Prefix each part with a dash
+                .join('\n');  // Join all parts with a new line
+
+            const output = `# Vehicle Parts Transfer Confirmation
+
+This document serves as official confirmation that the parts removed from the vehicle with registration number **${registration}** have been lawfully seized and transferred to the **Unified Police Department (UPD)**.
+
+## Vehicle Parts Seized:
+${partsList || '[Blank]'}
+
+## Signatories:
+- **Receiving Officer/Deputy (on behalf of the UPD):** ${officerCallsign} ${officerName}
+- **Authorizing Judge:** ${judgeTitle} ${judgeName}`;
+
+            document.getElementById('output').innerHTML = `<pre>${output}</pre>`;
+            const copyButton = document.createElement('button');
+            copyButton.textContent = 'Copy to Clipboard';
+            copyButton.className = 'btn waves-effect waves-light';
+            copyButton.onclick = copyToClipboard;
+            document.getElementById('output').insertBefore(copyButton, document.getElementById('output').firstChild);
+        }
+
+        function copyToClipboard() {
+            const output = document.querySelector('#output pre');
+            if (output) {
+                const range = document.createRange();
+                range.selectNodeContents(output);
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+                document.execCommand('copy');
+                selection.removeAllRanges();
+            }
+        }
+    </script>
+</body>
+</html>
