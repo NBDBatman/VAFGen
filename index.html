@@ -73,16 +73,16 @@ Full Set of Slick Tires" class="mt-1 block w-full h-64 rounded-md border-gray-60
                 </div>
             </div>
 
-            <!-- Buttons Section -->
-            <div class="text-center flex justify-center gap-4">
-                <button type="button" class="bg-red-600 text-white px-4 py-2 rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" onclick="clearFields()">Clear Fields</button>
+            <!-- Generate Document Button -->
+            <div class="text-center">
                 <button type="button" class="bg-indigo-600 text-white px-4 py-2 rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" onclick="generateDocument()">Generate Document</button>
-                <button type="button" class="bg-gray-700 text-white px-4 py-2 rounded-md shadow hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2" onclick="copyToClipboard()">Copy to Clipboard</button>
+                <button type="button" class="bg-gray-700 text-white px-4 py-2 mt-4 rounded-md shadow hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2" onclick="copyToClipboard()">Copy to Clipboard</button>
             </div>
         </form>
 
         <!-- Output Section -->
-        <div class="bg-gray-800 p-6 mt-6 rounded-lg shadow-lg border border-gray-600 hidden" id="output">
+        <div class="bg-gray-800 p-6 mt-6 rounded-lg shadow-lg border border-gray-600" id="output">
+            <div class="hidden" id="output-content">
             <pre class="text-white whitespace-pre-wrap"># Vehicle Parts Transfer Confirmation
 
 This document serves as official confirmation that the parts removed from the vehicle with registration number **[Blank]** & VIN number **[Blank]** have been lawfully seized and transferred to the **Unified Police Department (UPD)**.
