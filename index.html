@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Parts Transfer Confirmation</title>
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- External JS -->
+    <script src="script.js" defer></script>
+</head>
+<body class="bg-gray-900 text-gray-100">
+    <div class="container mx-auto py-8">
+        <h3 class="text-center text-2xl font-bold mb-6">Vehicle Parts Transfer Confirmation</h3>
+        <form class="bg-gray-800 p-6 rounded-lg shadow-lg">
+            <!-- Vehicle Registration and VIN Number -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <!-- Vehicle Registration Number -->
+                <div>
+                    <label for="registration" class="block text-sm font-medium text-gray-300">Vehicle Registration Number</label>
+                    <input id="registration" type="text" placeholder="E.g.: NZL6CSFQ" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-gray-100 shadow-sm pl-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <!-- VIN Number -->
+                <div>
+                    <label for="vin" class="block text-sm font-medium text-gray-300">VIN Number</label>
+                    <input id="vin" type="text" placeholder="E.g.: 3SRSP41PG4M079533" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-gray-100 shadow-sm pl-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+            </div>
+
+            <!-- Vehicle Parts Seized -->
+            <div class="mb-4">
+                <label for="parts" class="block text-sm font-medium text-gray-300">Vehicle Parts Seized</label>
+                <textarea id="parts" placeholder="E.g.:
+1x 98mm Turbo 
+1x 8-Speed Sequential Gearbox
+1x Stage 3 Brakes
+1x Stage 3 Dump Valve
+1x Stage 4 Coilovers
+1x Stage 5 Swaybars
+1x Stage 4 Dampeners
+1x Stage 3 Weight Reduction
+1x Stage 3 Clutch Plate
+Full Set of Slick Tires" class="mt-1 block w-full h-64 rounded-md border-gray-600 bg-gray-700 text-gray-100 shadow-sm pl-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm resize-none"></textarea>
+            </div>
+
+            <!-- Callsign and Officer Name -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <!-- Callsign Field -->
+                <div>
+                    <label for="officerCallsign" class="block text-sm font-medium text-gray-300">Callsign</label>
+                    <input id="officerCallsign" type="text" maxlength="3" placeholder="E.g.: 369" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-gray-100 shadow-sm pl-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <!-- Officer's Full Name Field -->
+                <div>
+                    <label for="officerName" class="block text-sm font-medium text-gray-300">Officer's Full Name</label>
+                    <input id="officerName" type="text" placeholder="E.g.: Mike Blunt" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-gray-100 shadow-sm pl-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+            </div>
+
+            <!-- Authorizing Judge -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <!-- Judge Rank Dropdown -->
+                <div>
+                    <label for="judge" class="block text-sm font-medium text-gray-300">Rank of Judge</label>
+                    <select id="judge" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-gray-100 shadow-sm pl-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="" disabled selected>Select Rank</option>
+                    </select>
+                </div>
+                <!-- Judge Name Field -->
+                <div>
+                    <label for="judgeName" class="block text-sm font-medium text-gray-300">Judge's Name</label>
+                    <input id="judgeName" type="text" placeholder="E.g.: Nathan Barr" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-gray-100 shadow-sm pl-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+            </div>
+
+            <!-- Buttons Section -->
+            <div class="text-center flex justify-center gap-4">
+                <button type="button" class="bg-red-600 text-white px-4 py-2 rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" onclick="clearFields()">Clear Fields</button>
+                <button type="button" class="bg-indigo-600 text-white px-4 py-2 rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" onclick="generateDocument()">Generate Document</button>
+                <button type="button" class="bg-gray-700 text-white px-4 py-2 rounded-md shadow hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2" onclick="copyToClipboard()">Copy to Clipboard</button>
+            </div>
+        </form>
+
+        <!-- Output Section -->
+        <div class="bg-gray-800 p-6 mt-6 rounded-lg shadow-lg border border-gray-600 hidden" id="output">
+            <pre class="text-white whitespace-pre-wrap"># Vehicle Parts Transfer Confirmation
+
+This document serves as official confirmation that the parts removed from the vehicle with registration number **[Blank]** & VIN number **[Blank]** have been lawfully seized and transferred to the **Unified Police Department (UPD)**.
+
+## Vehicle Parts Seized:
+- [Blank]
+
+## Signatories:
+- **Receiving Officer/Deputy (on behalf of the UPD):** [Blank] [Blank]
+- **Authorizing Judge:** [Blank] Judge/Justice</pre>
+        </div>
+    </div>
+</body>
+</html>
