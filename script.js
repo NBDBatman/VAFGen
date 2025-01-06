@@ -1,10 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
     loadRanks();
     loadDepartments();
+    addTestFillHandler();
 });
 
 function loadRanks() {
-    const ranks = ["Judge", "Justice", "Chief Justice"];
+    const ranks = ["Magistrate", "Judge", "Justice", "Chief Justice"];
 
     const judgeDropdown = document.getElementById('judge');
     judgeDropdown.innerHTML = '<option value="" disabled selected>Select Rank</option>';
@@ -32,6 +33,29 @@ function loadDepartments() {
         option.value = dept.value;
         option.textContent = dept.text;
         departmentDropdown.appendChild(option);
+    });
+}
+
+function addTestFillHandler() {
+    const testFillButton = document.getElementById('testFill');
+    testFillButton.addEventListener('click', function () {
+        document.getElementById('registration').value = "NZL6CSFQ";
+        document.getElementById('vin').value = "3SRSP41PG4M079533";
+        document.getElementById('parts').value = `1x 98mm Turbo
+1x 8-Speed Sequential Gearbox
+1x Stage 3 Brakes
+1x Stage 3 Dump Valve
+1x Stage 4 Coilovers
+1x Stage 5 Swaybars
+1x Stage 4 Dampeners
+1x Stage 3 Weight Reduction
+1x Stage 3 Clutch Plate
+Full Set of Slick Tires`;
+        document.getElementById('officerCallsign').value = "369";
+        document.getElementById('officerName').value = "Mike Blunt";
+        document.getElementById('judge').value = "Judge";
+        document.getElementById('judgeName').value = "Nathan Barr";
+        document.getElementById('department').value = "LSPD";
     });
 }
 
@@ -131,7 +155,6 @@ function formatDate(date) {
     const month = date.toLocaleString('default', { month: 'long' });
     const year = date.getFullYear();
 
-    // Add ordinal suffix to the day
     const ordinal = (n) => {
         const s = ["th", "st", "nd", "rd"];
         const v = n % 100;
