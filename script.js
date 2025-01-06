@@ -53,7 +53,7 @@ function addTestFillHandler() {
 Full Set of Slick Tires`;
         document.getElementById('officerCallsign').value = "369";
         document.getElementById('officerName').value = "Mike Blunt";
-        document.getElementById('judge').value = "Judge";
+        document.getElementById('judge').value = "Magistrate";
         document.getElementById('judgeName').value = "Nathan Barr";
         document.getElementById('department').value = "LSPD";
     });
