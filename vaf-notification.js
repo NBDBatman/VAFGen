@@ -1,25 +1,27 @@
 document.addEventListener('DOMContentLoaded', function () {
-    loadViolentFelonyCharges();
+    loadViolentCharges();
 });
 
-function loadViolentFelonyCharges() {
-    const charges = [
-        "Robbery of a Low-Security Institution",
-        "Aggravated Assault",
-        "Armed Robbery",
-        "Attempted Murder of a Government Official",
-        "Kidnapping",
-        "Homicide",
-        "Terrorism"
-    ];
+function loadViolentCharges() {
+    fetch('violent_charges.json') // Ensure this JSON file is in the same directory
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to load violent_charges.json: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const charges = data.violent_charges;
+            const reasonDropdown = document.getElementById('reason');
 
-    const reasonDropdown = document.getElementById('reason');
-    charges.forEach(charge => {
-        const option = document.createElement('option');
-        option.value = charge;
-        option.textContent = charge;
-        reasonDropdown.appendChild(option);
-    });
+            charges.forEach(charge => {
+                const option = document.createElement('option');
+                option.value = charge;
+                option.textContent = charge;
+                reasonDropdown.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error loading charges:', error));
 }
 
 function generateNotification() {
@@ -42,22 +44,18 @@ function generateNotification() {
 
     if (document.querySelectorAll('.error-message').length) return;
 
-    const currentDate = formatDate(new Date());
-    const currentTime = formatTime(new Date());
-    const timeZone = getTimeZoneAbbreviation();
-
     const output = `${suspectName},
 
 A vehicle registered to you received a VAF point. Please see the details below.
 
 Vehicle: ${vehicleModel} (${vehiclePlate})
-Date: ${currentDate}
+Date: ${formatDate(new Date())}
 RO: ${suspectName}
 ${type}: #${incidentNumber}
 Reason: ${reason}
 Processing Officer: 
 
-This notification was shared with State ID (${suspectID}) on ${currentDate} @ ${currentTime} (${timeZone})`;
+This notification was shared with State ID (${suspectID}) on ${formatDate(new Date())} @ ${formatTime(new Date())} (${getTimeZoneAbbreviation()})`;
 
     document.getElementById('output').innerHTML = `<pre class="whitespace-pre-wrap text-white">${output}</pre>`;
     document.getElementById('output').classList.remove('hidden');
@@ -101,19 +99,6 @@ function showError(fieldId, message) {
 
 function clearErrorMessages() {
     document.querySelectorAll('.error-message').forEach(error => error.remove());
-}
-
-function copyToClipboard() {
-    const output = document.querySelector('#output pre');
-    if (output) {
-        const range = document.createRange();
-        range.selectNodeContents(output);
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
-        document.execCommand('copy');
-        selection.removeAllRanges();
-    }
 }
 
 function clearFields() {
