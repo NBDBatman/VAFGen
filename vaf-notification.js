@@ -3,13 +3,8 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function loadViolentCharges() {
-    fetch('violent_charges.json') // Ensure this JSON file is in the same directory
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Failed to load violent_charges.json: ${response.statusText}`);
-            }
-            return response.json();
-        })
+    fetch('violent_charges.json')
+        .then(response => response.json())
         .then(data => {
             const charges = data.violent_charges;
             const reasonDropdown = document.getElementById('reason');
@@ -21,7 +16,7 @@ function loadViolentCharges() {
                 reasonDropdown.appendChild(option);
             });
         })
-        .catch(error => console.error('Error loading charges:', error));
+        .catch(console.error);
 }
 
 function generateNotification() {
@@ -33,56 +28,56 @@ function generateNotification() {
     const type = document.getElementById('type').value;
     const incidentNumber = document.getElementById('incidentNumber').value.trim();
     const reason = document.getElementById('reason').value;
+    const processingOfficer = document.getElementById('processingOfficer').value.trim();
     const suspectID = document.getElementById('suspectID').value.trim();
 
     if (!suspectName) showError('suspectName', 'Suspect Name is required.');
     if (!vehicleModel) showError('vehicleModel', 'Vehicle Model is required.');
     if (!vehiclePlate) showError('vehiclePlate', 'Vehicle Plate is required.');
-    if (!incidentNumber) showError('incidentNumber', `${type} Number is required.`);
     if (!reason) showError('reason', 'Reason is required.');
+    if (!processingOfficer) showError('processingOfficer', 'Processing Officer is required.');
     if (!suspectID) showError('suspectID', 'Suspect ID is required.');
 
     if (document.querySelectorAll('.error-message').length) return;
+
+    const now = new Date();
+    const formattedDate = now.toLocaleDateString('en-US', { timeZone: 'UTC' });
+    const timeOptions = {
+        timeZoneName: 'short',
+        hour12: true,
+        hour: '2-digit',
+        minute: '2-digit',
+    };
+    const timeParts = now
+        .toLocaleTimeString('en-US', timeOptions)
+        .split(' ');
+    const formattedTime = `${timeParts[0]} ${timeParts[1]} (${timeParts[2]})`;
 
     const output = `${suspectName},
 
 A vehicle registered to you received a VAF point. Please see the details below.
 
 Vehicle: ${vehicleModel} (${vehiclePlate})
-Date: ${formatDate(new Date())}
 RO: ${suspectName}
 ${type}: #${incidentNumber}
 Reason: ${reason}
-Processing Officer: 
+Processing Officer: ${processingOfficer}
 
-This notification was shared with State ID (${suspectID}) on ${formatDate(new Date())} @ ${formatTime(new Date())} (${getTimeZoneAbbreviation()})`;
+This notification was shared with State ID (${suspectID}) on ${formattedDate} @ ${formattedTime}`;
 
-    document.getElementById('output').innerHTML = `<pre class="whitespace-pre-wrap text-white">${output}</pre>`;
-    document.getElementById('output').classList.remove('hidden');
-}
+    const outputContainer = document.getElementById('output');
+    const loading = document.getElementById('loading');
+    const outputContent = document.getElementById('outputContent');
 
-function formatDate(date) {
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${month}/${day}/${year}`;
-}
+    outputContainer.classList.remove('hidden');
+    loading.classList.remove('hidden');
+    outputContent.classList.add('opacity-0');
 
-function formatTime(date) {
-    return date.toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-    });
-}
-
-function getTimeZoneAbbreviation() {
-    const date = new Date();
-    const options = { timeZoneName: 'short' };
-    const formatter = new Intl.DateTimeFormat('en-US', options);
-    const parts = formatter.formatToParts(date);
-    const timeZonePart = parts.find(part => part.type === 'timeZoneName');
-    return timeZonePart ? timeZonePart.value : 'GMT';
+    setTimeout(() => {
+        loading.classList.add('hidden');
+        outputContent.textContent = output;
+        outputContent.classList.replace('opacity-0', 'opacity-100');
+    }, 2000);
 }
 
 function showError(fieldId, message) {
@@ -108,6 +103,7 @@ function clearFields() {
     document.getElementById('type').value = 'Incident';
     document.getElementById('incidentNumber').value = '';
     document.getElementById('reason').value = '';
+    document.getElementById('processingOfficer').value = '';
     document.getElementById('suspectID').value = '';
     clearErrorMessages();
     document.getElementById('output').classList.add('hidden');
