@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VAF Notification</title>
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- External JS -->
+    <script src="vaf-notification.js" defer></script>
+</head>
+<body class="bg-gray-900 text-gray-100">
+    <!-- Shared Header -->
+    <header class="bg-gray-800 text-gray-100 shadow-md py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">San Andreas Department of Justice & Law Enforcement</h1>
+            <nav class="flex space-x-4">
+                <a href="index.html" class="px-4 py-2 rounded-md hover:bg-gray-700">VAF Contract</a>
+                <a href="vaf-notification.html" class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">VAF Notification</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container mx-auto py-8">
+        <h3 class="text-center text-2xl font-bold mb-6">VAF Notification Generator</h3>
+        <form id="vafForm" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+            <!-- Suspect Name -->
+            <div class="mb-4">
+                <label for="suspectName" class="block text-sm font-medium text-gray-300">
+                    Suspect Name <span class="text-red-500">*</span>
+                </label>
+                <input id="suspectName" type="text" placeholder="E.g.: John Doe" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-gray-100 shadow-sm pl-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            </div>
+
+            <!-- Vehicle Model and Plate -->
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <!-- Vehicle Model -->
+                <div>
+                    <label for="vehicleModel" class="block text-sm font-medium text-gray-300">
+                        Vehicle Model <span class="text-red-500">*</span>
+                    </label>
+                    <input id="vehicleModel" type="text" placeholder="E.g.: Sultan RS" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-gray-100 shadow-sm pl-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <!-- Vehicle Plate -->
+                <div>
+                    <label for="vehiclePlate" class="block text-sm font-medium text-gray-300">
+                        Vehicle Plate <span class="text-red-500">*</span>
+                    </label>
+                    <input id="vehiclePlate" type="text" placeholder="E.g.: ABC123" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-gray-100 shadow-sm pl-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+            </div>
+
+            <!-- Incident/Report Type -->
+            <div class="mb-4">
+                <label for="type" class="block text-sm font-medium text-gray-300">
+                    Notification Type <span class="text-red-500">*</span>
+                </label>
+                <select id="type" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-gray-100 shadow-sm pl-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    <option value="Incident" selected>Incident</option>
+                    <option value="Report">Report</option>
+                </select>
+            </div>
+
+            <!-- Incident/Report Number -->
+            <div class="mb-4">
+                <label for="incidentNumber" class="block text-sm font-medium text-gray-300">
+                    Incident/Report Number <span class="text-red-500">*</span>
+                </label>
+                <input id="incidentNumber" type="text" placeholder="E.g.: 1234" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-gray-100 shadow-sm pl-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            </div>
+
+            <!-- Reason (Principal Charge) -->
+            <div class="mb-4">
+                <label for="reason" class="block text-sm font-medium text-gray-300">
+                    Reason (Principal Charge) <span class="text-red-500">*</span>
+                </label>
+                <select id="reason" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-gray-100 shadow-sm pl-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    <option value="" disabled selected>Select Charge</option>
+                    <!-- Dropdown options will be dynamically populated -->
+                </select>
+            </div>
+
+            <!-- Suspect ID -->
+            <div class="mb-4">
+                <label for="suspectID" class="block text-sm font-medium text-gray-300">
+                    Suspect ID <span class="text-red-500">*</span>
+                </label>
+                <input id="suspectID" type="text" placeholder="E.g.: 56789" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-gray-100 shadow-sm pl-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            </div>
+
+            <!-- Buttons Section -->
+            <div class="text-center flex justify-center gap-4">
+                <button type="button" class="bg-red-600 text-white px-4 py-2 rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" onclick="clearFields()">Clear Fields</button>
+                <button type="button" class="bg-indigo-600 text-white px-4 py-2 rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" onclick="generateNotification()">Generate Notification</button>
+                <button type="button" class="bg-gray-700 text-white px-4 py-2 rounded-md shadow hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2" onclick="copyToClipboard()">Copy to Clipboard</button>
+            </div>
+        </form>
+
+        <!-- Output Section -->
+        <div class="bg-gray-800 p-6 mt-6 rounded-lg shadow-lg border border-gray-600 hidden" id="output">
+            <pre class="text-white whitespace-pre-wrap"></pre>
+        </div>
+    </div>
+</body>
+</html>
