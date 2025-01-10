@@ -60,10 +60,8 @@ Full Set of Slick Tires`;
 }
 
 function generateDocument() {
-    // Clear previous error messages
     clearErrorMessages();
 
-    // Gather field values
     const registration = document.getElementById('registration').value.trim();
     const vin = document.getElementById('vin').value.trim();
     const partsInput = document.getElementById('parts').value.trim();
@@ -73,7 +71,6 @@ function generateDocument() {
     const judgeName = document.getElementById('judgeName').value.trim();
     const department = document.getElementById('department').value;
 
-    // Validate fields
     let isValid = true;
 
     if (!registration) {
@@ -109,66 +106,80 @@ function generateDocument() {
         isValid = false;
     }
 
-    // Stop if any field is invalid
     if (!isValid) return;
 
-    // Get the current date in the format "5th of January 2025"
     const currentDate = formatDate(new Date());
-
-    let departmentShortName = '';
-    let receivingTitle = '';
-
-    if (department === 'LSPD') {
-        departmentShortName = 'LSPD';
-        receivingTitle = 'Receiving Officer';
-    } else if (department === 'BCSO') {
-        departmentShortName = 'BCSO';
-        receivingTitle = 'Receiving Deputy';
-    } else if (department === 'SASM') {
-        departmentShortName = 'SASM';
-        receivingTitle = 'Receiving Marshal';
-    }
-
-    const partsList = partsInput
-        .split('\n')
-        .filter(line => line.trim() !== '')
-        .map(line => `- ${line.trim()}`)
-        .join('\n');
+    const departmentDetails = getDepartmentDetails(department);
+    const partsList = partsInput.split('\n').map(line => `- ${line.trim()}`).join('\n');
 
     const output = `# Vehicle Parts Transfer Confirmation (${currentDate})
 
-This document serves as official confirmation that the parts removed from the vehicle with registration number **${registration}** & VIN number **${vin}** have been lawfully seized and transferred to the **${department === 'LSPD' ? 'Los Santos Police Department (LSPD)' : department === 'BCSO' ? "Blaine County Sheriff's Office (BCSO)" : 'San Andreas State Marshals (SASM)'}**.
+This document serves as official confirmation that the parts removed from the vehicle with registration number **${registration}** & VIN number **${vin}** have been lawfully seized and transferred to the **${departmentDetails.fullName}**.
 
 ## Vehicle Parts Seized:
 ${partsList}
 
 ## Signatories:
-- **${receivingTitle} (on behalf of ${departmentShortName}):** ${officerCallsign} ${officerName}
-- **Authorizing Judge:** ${judgeDropdown} ${judgeName}`;
+- **${departmentDetails.title} (on behalf of ${departmentDetails.shortName}):** ${officerCallsign} ${officerName}
+- **Authorizing ${judgeDropdown}:** ${judgeName}`;
 
-    document.getElementById('output').innerHTML = `<pre class="whitespace-pre-wrap text-white">${output}</pre>`;
-    document.getElementById('output').classList.remove('hidden');
+    const outputContainer = document.getElementById('output');
+    const loading = document.getElementById('loading');
+    const outputContent = document.getElementById('outputContent');
+
+    outputContainer.classList.remove('hidden');
+    loading.classList.remove('hidden');
+    outputContent.classList.add('opacity-0');
+
+    setTimeout(() => {
+        loading.classList.add('hidden');
+        outputContent.textContent = output;
+        outputContent.classList.replace('opacity-0', 'opacity-100');
+        sendToDiscord(output, currentDate);
+    }, 2000);
+}
+
+function sendToDiscord(content, date) {
+    const webhookUrl = "https://discord.com/api/webhooks/1327035420004978768/5XVAyG7laB9n7_XsFRCNxkK-O_1vTlA77i44TVtwdzbulcUS5HXfZ2l1wRGWN4KSKcvd";
+
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('en-US', {
+        hour12: true,
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZoneName: 'short',
+    });
+
+    const message = `**A new Parts Transfer Contract has been generated.**\nGenerated on **${date} @ ${timeString}**\n\`\`\`${content}\`\`\``;
+
+    fetch(webhookUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content: message }),
+    }).catch(console.error);
 }
 
 function formatDate(date) {
     const day = date.getDate();
     const month = date.toLocaleString('default', { month: 'long' });
     const year = date.getFullYear();
-
-    const ordinal = (n) => {
-        const s = ["th", "st", "nd", "rd"];
-        const v = n % 100;
-        return s[(v - 20) % 10] || s[v] || s[0];
-    };
+    const ordinal = (n) => ["th", "st", "nd", "rd"][(n % 10 > 3 || Math.floor(n % 100 / 10) === 1) ? 0 : n % 10];
 
     return `${day}${ordinal(day)} of ${month} ${year}`;
+}
+
+function getDepartmentDetails(department) {
+    if (department === "LSPD") return { fullName: "Los Santos Police Department (LSPD)", shortName: "LSPD", title: "Receiving Officer" };
+    if (department === "BCSO") return { fullName: "Blaine County Sheriff's Office (BCSO)", shortName: "BCSO", title: "Receiving Deputy" };
+    if (department === "SASM") return { fullName: "San Andreas State Marshals (SASM)", shortName: "SASM", title: "Receiving Marshal" };
 }
 
 function showError(fieldId, message) {
     const field = document.getElementById(fieldId);
     const parent = field.parentElement;
 
-    // Check if an error message already exists
     if (!parent.querySelector('.error-message')) {
         const error = document.createElement('p');
         error.className = 'text-red-500 text-sm mt-1 error-message';
@@ -178,22 +189,7 @@ function showError(fieldId, message) {
 }
 
 function clearErrorMessages() {
-    // Remove only error messages (not labels or the red `*`)
-    const errors = document.querySelectorAll('.error-message');
-    errors.forEach(error => error.remove());
-}
-
-function copyToClipboard() {
-    const output = document.querySelector('#output pre');
-    if (output) {
-        const range = document.createRange();
-        range.selectNodeContents(output);
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
-        document.execCommand('copy');
-        selection.removeAllRanges();
-    }
+    document.querySelectorAll('.error-message').forEach(error => error.remove());
 }
 
 function clearFields() {
