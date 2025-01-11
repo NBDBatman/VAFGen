@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loadRanks();
     loadDepartments();
     addTestFillHandler();
+    addPageTransitionHandler();
 });
 
 function loadRanks() {
@@ -228,4 +229,19 @@ function showCopyNotification() {
         notification.classList.remove('opacity-100');
         notification.classList.add('opacity-0');
     }, 3000); // Hide after 3 seconds
+}
+
+function addPageTransitionHandler() {
+    const links = document.querySelectorAll('a[href]');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+
+    links.forEach(link => {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            loadingOverlay.style.display = 'flex';
+            setTimeout(() => {
+                window.location.href = this.href;
+            }, 500); // Simulate loading delay
+        });
+    });
 }

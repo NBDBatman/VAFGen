@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VAF Generator</title>
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- External JS -->
+    <script src="index.js" defer></script>
+    <style>
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100">
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="flex justify-center items-center py-4">
+            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-500"></div>
+            <span class="ml-4 text-indigo-400 font-medium">Loading...</span>
+        </div>
+    </div>
+    <header class="bg-gray-800 text-gray-100 shadow-md py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold">San Andreas Department of Justice & Law Enforcement</a>
+            <nav class="flex space-x-4">
+                <a href="vaf-contract.html" class="px-4 py-2 rounded-md hover:bg-gray-700">VAF Contract</a>
+                <a href="vaf-notification.html" class="px-4 py-2 rounded-md hover:bg-gray-700">VAF Notification</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container mx-auto py-8">
+        <h3 class="text-center text-2xl font-bold mb-6">Welcome to San Andreas Department of Justice and Law Enforcement</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <a href="vaf-contract.html" class="block bg-indigo-600 text-white text-center py-6 rounded-lg shadow-lg hover:bg-indigo-700 transition duration-300">
+                <h4 class="text-xl font-bold">VAF Contract</h4>
+                <p class="mt-2">Generate Vehicle Parts Transfer Confirmation</p>
+            </a>
+            <a href="vaf-notification.html" class="block bg-indigo-600 text-white text-center py-6 rounded-lg shadow-lg hover:bg-indigo-700 transition duration-300">
+                <h4 class="text-xl font-bold">VAF Notification</h4>
+                <p class="mt-2">Generate VAF Notification</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
