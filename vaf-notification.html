@@ -10,7 +10,6 @@
     <script src="vaf-notification.js" defer></script>
 </head>
 <body class="bg-gray-900 text-gray-100">
-    <!-- Shared Header -->
     <header class="bg-gray-800 text-gray-100 shadow-md py-4">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-xl font-bold">San Andreas Department of Justice & Law Enforcement</h1>
@@ -20,6 +19,9 @@
             </nav>
         </div>
     </header>
+
+    <!-- Notification element moved here -->
+    <div id="copyNotification" class="fixed top-16 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg opacity-0 transition-opacity duration-500">Copied to clipboard!</div>
 
     <div class="container mx-auto py-8">
         <h3 class="text-center text-2xl font-bold mb-6">VAF Notification Generator</h3>
@@ -97,7 +99,7 @@
             <div class="text-center flex justify-center gap-4">
                 <button type="button" class="bg-red-600 text-white px-4 py-2 rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" onclick="clearFields()">Clear Fields</button>
                 <button type="button" class="bg-indigo-600 text-white px-4 py-2 rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" onclick="generateNotification()">Generate Notification</button>
-                <button type="button" class="bg-gray-700 text-white px-4 py-2 rounded-md shadow hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2" onclick="copyToClipboard()">Copy to Clipboard</button>
+                <button id="copyButton" type="button" class="bg-gray-700 text-white px-4 py-2 rounded-md shadow hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2" onclick="copyToClipboard()" disabled>Copy to Clipboard</button>
             </div>
         </form>
 

@@ -33,14 +33,16 @@ function generateNotification() {
     const suspectID = document.getElementById('suspectID').value.trim();
 
     // Validate inputs
-    if (!suspectName) showError('suspectName', 'Suspect Name is required.');
-    if (!vehicleModel) showError('vehicleModel', 'Vehicle Model is required.');
-    if (!vehiclePlate) showError('vehiclePlate', 'Vehicle Plate is required.');
-    if (!reason) showError('reason', 'Reason is required.');
-    if (!processingOfficer) showError('processingOfficer', 'Processing Officer is required.');
-    if (!suspectID) showError('suspectID', 'Suspect ID is required.');
-
-    if (document.querySelectorAll('.error-message').length) return;
+    if (!suspectName || !vehicleModel || !vehiclePlate || !reason || !processingOfficer || !suspectID) {
+        // Show error messages if any field is empty
+        if (!suspectName) showError('suspectName', 'Suspect Name is required.');
+        if (!vehicleModel) showError('vehicleModel', 'Vehicle Model is required.');
+        if (!vehiclePlate) showError('vehiclePlate', 'Vehicle Plate is required.');
+        if (!reason) showError('reason', 'Reason is required.');
+        if (!processingOfficer) showError('processingOfficer', 'Processing Officer is required.');
+        if (!suspectID) showError('suspectID', 'Suspect ID is required.');
+        return;
+    }
 
     // Generate date and time
     const now = new Date();
@@ -81,10 +83,13 @@ This notification was shared with State ID (${suspectID}) on ${formattedDate} @ 
     outputContainer.classList.remove('hidden');
     outputContent.classList.add('opacity-0');
 
+    // Enable the copy button
+    document.getElementById('copyButton').disabled = false;
+
     // Simulate generation delay and display document
     setTimeout(() => {
-        loading.classList.add('hidden'); // Hide loading animation
-        outputContent.classList.replace('opacity-0', 'opacity-100'); // Fade in the document
+        loading.classList.add('hidden');
+        outputContent.classList.remove('opacity-0');
     }, 2000);
 
     // Log to Discord webhook
@@ -148,4 +153,28 @@ function clearFields() {
     outputContainer.classList.add('hidden');
     loading.classList.add('hidden');
     outputContent.classList.add('opacity-0');
+}
+
+function copyToClipboard() {
+    const outputContent = document.getElementById('outputContent').textContent;
+    if (outputContent.trim() === "") {
+        console.error('No content to copy');
+        return;
+    }
+    navigator.clipboard.writeText(outputContent).then(() => {
+        showCopyNotification();
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+    });
+}
+
+function showCopyNotification() {
+    const notification = document.getElementById('copyNotification');
+    notification.classList.remove('opacity-0');
+    notification.classList.add('opacity-100');
+
+    setTimeout(() => {
+        notification.classList.remove('opacity-100');
+        notification.classList.add('opacity-0');
+    }, 3000); // Hide after 3 seconds
 }

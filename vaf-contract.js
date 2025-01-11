@@ -135,6 +135,7 @@ ${partsList}
         loading.classList.add('hidden');
         outputContent.textContent = output;
         outputContent.classList.replace('opacity-0', 'opacity-100');
+        document.getElementById('copyButton').disabled = false;
         sendToDiscord(output, currentDate);
     }, 2000);
 }
@@ -203,4 +204,28 @@ function clearFields() {
     document.getElementById('department').value = '';
     document.getElementById('output').classList.add('hidden');
     clearErrorMessages();
+}
+
+function copyToClipboard() {
+    const outputContent = document.getElementById('outputContent').textContent;
+    if (outputContent.trim() === "") {
+        console.error('No content to copy');
+        return;
+    }
+    navigator.clipboard.writeText(outputContent).then(() => {
+        showCopyNotification();
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+    });
+}
+
+function showCopyNotification() {
+    const notification = document.getElementById('copyNotification');
+    notification.classList.remove('opacity-0');
+    notification.classList.add('opacity-100');
+
+    setTimeout(() => {
+        notification.classList.remove('opacity-100');
+        notification.classList.add('opacity-0');
+    }, 3000); // Hide after 3 seconds
 }
