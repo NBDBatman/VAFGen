@@ -43,15 +43,15 @@ function addTestFillHandler() {
         document.getElementById('registration').value = "NZL6CSFQ";
         document.getElementById('vin').value = "3SRSP41PG4M079533";
         document.getElementById('parts').value = `1x 98mm Turbo
-1x 8-Speed Sequential Gearbox
-1x Stage 3 Brakes
-1x Stage 3 Dump Valve
-1x Stage 4 Coilovers
-1x Stage 5 Swaybars
-1x Stage 4 Dampeners
-1x Stage 3 Weight Reduction
-1x Stage 3 Clutch Plate
-Full Set of Slick Tires`;
+1x 8-Speed Sequential Gearbox (62% Quality)
+1x Stage 3 Brakes (100% Quality)
+1x Stage 3 Dump Valve (61% Quality)
+1x Stage 4 Coilovers (17% Quality)
+1x Stage 5 Swaybars (10% Quality)
+1x Stage 4 Dampeners (88% Quality)
+1x Stage 3 Weight Reduction (75% Quality)
+1x Stage 3 Clutch Plate (51% Quality)
+Full Set of Slick Tires (98% Quality)`;
         document.getElementById('officerCallsign').value = "369";
         document.getElementById('officerName').value = "Mike Blunt";
         document.getElementById('judge').value = "Magistrate";
