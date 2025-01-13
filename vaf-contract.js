@@ -42,7 +42,7 @@ function addTestFillHandler() {
     testFillButton.addEventListener('click', function () {
         document.getElementById('registration').value = "NZL6CSFQ";
         document.getElementById('vin').value = "3SRSP41PG4M079533";
-        document.getElementById('parts').value = `1x 98mm Turbo
+        document.getElementById('parts').value = `1x 98mm Turbo (48% Quality)
 1x 8-Speed Sequential Gearbox (62% Quality)
 1x Stage 3 Brakes (100% Quality)
 1x Stage 3 Dump Valve (61% Quality)
