@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Authorization Permit</title>
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- External JS -->
+    <script src="parking-permit.js" defer></script>
+    <style>
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100">
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="flex justify-center items-center py-4">
+            <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-500"></div>
+            <span class="ml-4 text-indigo-400 font-medium">Loading...</span>
+        </div>
+    </div>
+    <header class="bg-gray-800 text-gray-100 shadow-md py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold">San Andreas Department of Justice & Law Enforcement</a>
+            <nav class="flex space-x-4">
+                <a href="vaf-contract.html" class="px-4 py-2 rounded-md hover:bg-gray-700">VAF Contract</a>
+                <a href="vaf-notification.html" class="px-4 py-2 rounded-md hover:bg-gray-700">VAF Notification</a>
+                <a href="parking-permit.html" class="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Parking Permit</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Notification elements -->
+    <div id="copyNotification" class="fixed top-20 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg opacity-0 transition-opacity duration-500">Copied to clipboard!</div>
+    <div id="clearNotification" class="fixed top-20 right-4 bg-blue-500 text-white px-4 py-2 rounded-md shadow-lg opacity-0 transition-opacity duration-500">Fields cleared!</div>
+
+    <div class="container mx-auto py-8">
+        <h3 class="text-center text-2xl font-bold mb-6">Parking Authorization Permit</h3>
+        <form class="bg-gray-800 p-6 rounded-lg shadow-lg">
+            <!-- Permit Holder Name -->
+            <div class="mb-4">
+                <label for="permitHolderName" class="block text-sm font-medium text-gray-300">
+                    Permit Holder Name <span class="text-red-500">*</span>
+                </label>
+                <input id="permitHolderName" type="text" placeholder="E.g.: John Doe" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-gray-100 shadow-sm pl-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            </div>
+
+            <!-- Location -->
+            <div class="mb-4">
+                <label for="location" class="block text-sm font-medium text-gray-300">
+                    Location <span class="text-red-500">*</span>
+                </label>
+                <input id="location" type="text" placeholder="E.g.: 123 Main St, Los Santos" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-gray-100 shadow-sm pl-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            </div>
+
+            <!-- Date of Authorization -->
+            <div class="mb-4">
+                <label for="dateOfAuthorization" class="block text-sm font-medium text-gray-300">
+                    Date of Authorization <span class="text-red-500">*</span>
+                </label>
+                <input id="dateOfAuthorization" type="date" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-gray-100 shadow-sm pl-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            </div>
+
+            <!-- Authorizing Person's Name -->
+            <div class="mb-4">
+                <label for="authorizingPersonName" class="block text-sm font-medium text-gray-300">
+                    Authorizing Person's Name <span class="text-red-500">*</span>
+                </label>
+                <input id="authorizingPersonName" type="text" placeholder="E.g.: Officer Smith" class="mt-1 block w-full rounded-md border-gray-600 bg-gray-700 text-gray-100 shadow-sm pl-2 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            </div>
+
+            <!-- Buttons Section -->
+            <div class="text-center flex justify-center gap-4">
+                <button type="button" class="bg-red-600 text-white px-4 py-2 rounded-md shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" onclick="clearFields()">Clear Fields</button>
+                <button type="button" class="bg-indigo-600 text-white px-4 py-2 rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" onclick="generateDocument()">Generate Document</button>
+                <button id="copyButton" type="button" class="bg-gray-700 text-white px-4 py-2 rounded-md shadow hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2" onclick="copyToClipboard()" disabled>Copy to Clipboard</button>
+            </div>
+        </form>
+
+        <!-- Output Section -->
+        <div class="bg-gray-800 p-6 mt-6 rounded-lg shadow-lg border border-gray-600 hidden" id="output">
+            <!-- Loading Animation -->
+            <div id="loading" class="flex justify-center items-center py-4">
+                <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-500"></div>
+                <span class="ml-4 text-indigo-400 font-medium">Generating document...</span>
+            </div>
+            <!-- Document Output -->
+            <pre class="text-white whitespace-pre-wrap opacity-0 transition-opacity duration-500" id="outputContent"></pre>
+        </div>
+    </div>
+</body>
+</html>
